@@ -93,12 +93,12 @@ class Empty extends Game {
         // Clear screen to black
 		g.clear(Color.Black);
 
+		// Bind shader program we want to draw with
+		g.setProgram(program);
+
 		// Bind data we want to draw
 		g.setVertexBuffer(vertexBuffer);
 		g.setIndexBuffer(indexBuffer);
-
-		// Bind shader program we want to draw with
-		g.setProgram(program);
 
 		// Draw!
 		g.drawIndexedVertices();
