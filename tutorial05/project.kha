@@ -1,0 +1,26 @@
+{
+	"format": 2,
+	"game": {
+		"name": "Empty",
+		"width": 640,
+		"height": 480,
+		"antiAliasingSamples": 2
+	},
+	"assets": [
+		{
+			"file": "uvtemplate.png",
+			"name": "uvtemplate",
+			"type": "image"
+		}
+	],
+	"rooms": [
+		{
+			"assets": [
+				"uvtemplate"
+			],
+			"name": "room0",
+			"neighbours": [],
+			"parent": null
+		}
+	]
+}

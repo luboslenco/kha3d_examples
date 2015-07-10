@@ -1,0 +1,32 @@
+{
+	"format": 2,
+	"game": {
+		"name": "Empty",
+		"width": 640,
+		"height": 480,
+		"antiAliasingSamples": 2
+	},
+	"assets": [
+		{
+			"file": "uvmap.png",
+			"name": "uvmap",
+			"type": "image"
+		},
+		{
+			"file": "cube.obj",
+			"name": "cube",
+			"type": "blob"
+		}
+	],
+	"rooms": [
+		{
+			"assets": [
+				"uvmap",
+				"cube"
+			],
+			"name": "room0",
+			"neighbours": [],
+			"parent": null
+		}
+	]
+}
