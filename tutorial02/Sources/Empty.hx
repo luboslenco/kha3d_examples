@@ -33,7 +33,7 @@ class Empty extends Game {
 	var program:Program;
 
 	public function new() {
-		super("Empty", false);
+		super("Empty");
 	}
 
 	override public function init() {
@@ -57,7 +57,7 @@ class Empty extends Game {
 
 		// Create vertex buffer
 		vertexBuffer = new VertexBuffer(
-			Std.int(vertices.length / structureLength), // Vertex count - 9 / 3 = 3
+			Std.int(vertices.length / 3), // Vertex count - 3 floats per vertex
 			structure, // Vertex structure
 			Usage.StaticUsage // Vertex data will stay the same
 		);

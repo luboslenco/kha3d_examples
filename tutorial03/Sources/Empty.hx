@@ -36,10 +36,10 @@ class Empty extends Game {
 	var program:Program;
 
 	var mvp:Matrix4;
-	var matrixID:ConstantLocation;
+	var mvpID:ConstantLocation;
 
 	public function new() {
-		super("Empty", false);
+		super("Empty");
 	}
 
 	override public function init() {
@@ -62,7 +62,7 @@ class Empty extends Game {
 		program.link(structure);
 
 		// Get a handle for our "MVP" uniform
-		matrixID = program.getConstantLocation("MVP");
+		mvpID = program.getConstantLocation("MVP");
 
 		// Projection matrix: 45° Field of View, 4:3 ratio, display range : 0.1 unit <-> 100 units
 		var projection = Matrix4.perspectiveProjection(45.0, 4.0 / 3.0, 0.1, 100.0);
@@ -70,14 +70,14 @@ class Empty extends Game {
 		//var projection = Matrix4.orthogonalProjection(-10.0, 10.0, -10.0, 10.0, 0.0, 100.0); // In world coordinates
 		
 		// Camera matrix
-		var view = Matrix4.lookAt(new Vector3(4,3,-3), // Camera is at (4,3,-3), in World Space
-								  new Vector3(0,0,0), // and looks at the origin
-								  new Vector3(0,1,0) // Head is up (set to 0,-1,0 to look upside-down)
+		var view = Matrix4.lookAt(new Vector3(4, 3, 3), // Camera is at (4, 3, 3), in World Space
+								  new Vector3(0, 0, 0), // and looks at the origin
+								  new Vector3(0, 1, 0) // Head is up (set to (0, -1, 0) to look upside-down)
 		);
 
-		// Model matrix : an identity matrix (model will be at the origin)
+		// Model matrix: an identity matrix (model will be at the origin)
 		var model = Matrix4.identity();
-		// Our ModelViewProjection : multiplication of our 3 matrices
+		// Our ModelViewProjection: multiplication of our 3 matrices
 		// Remember, matrix multiplication is the other way around
 		mvp = Matrix4.identity();
 		mvp = mvp.multmat(projection);
@@ -86,7 +86,7 @@ class Empty extends Game {
 
 		// Create vertex buffer
 		vertexBuffer = new VertexBuffer(
-			Std.int(vertices.length / structureLength), // Vertex count - 9 / 3 = 3
+			Std.int(vertices.length / 3), // Vertex count - 3 floats per vertex
 			structure, // Vertex structure
 			Usage.StaticUsage // Vertex data will stay the same
 		);
@@ -130,7 +130,7 @@ class Empty extends Game {
 		g.setProgram(program);
 
 		// Send our transformation to the currently bound shader, in the "MVP" uniform
-		g.setMatrix(matrixID, mvp);
+		g.setMatrix(mvpID, mvp);
 
 		// Draw!
 		g.drawIndexedVertices();

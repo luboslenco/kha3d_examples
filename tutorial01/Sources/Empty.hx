@@ -7,7 +7,7 @@ import kha.Color;
 class Empty extends Game {
 
 	public function new() {
-		super("Empty", false);
+		super("Empty");
 	}
 
 	override public function render(frame:Framebuffer) {
