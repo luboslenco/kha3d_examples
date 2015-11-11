@@ -181,11 +181,11 @@ class Empty extends Game {
 		// Copy vertices and uvs to vertex buffer
 		var vbData = vertexBuffer.lock();
 		for (i in 0...Std.int(vbData.length / structureLength)) {
-			vbData[i * structureLength] = vertices[i * 3];
-			vbData[i * structureLength + 1] = vertices[i * 3 + 1];
-			vbData[i * structureLength + 2] = vertices[i * 3 + 2];
-			vbData[i * structureLength + 3] = uvs[i * 2];
-			vbData[i * structureLength + 4] = uvs[i * 2 + 1];
+			vbData.set(i * structureLength, vertices[i * 3]);
+			vbData.set(i * structureLength + 1, vertices[i * 3 + 1]);
+			vbData.set(i * structureLength + 2, vertices[i * 3 + 2]);
+			vbData.set(i * structureLength + 3, uvs[i * 2]);
+			vbData.set(i * structureLength + 4, uvs[i * 2 + 1]);
 		}
 		vertexBuffer.unlock();
 

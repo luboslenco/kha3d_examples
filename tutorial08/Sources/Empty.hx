@@ -140,7 +140,7 @@ class Empty extends Game {
 		// Copy data to vertex buffer
 		var vbData = vertexBuffer.lock();
 		for (i in 0...vbData.length) {
-			vbData[i] = data[i];
+			vbData.set(i, data[i]);
 		}
 		vertexBuffer.unlock();
 
@@ -281,7 +281,7 @@ class Empty extends Game {
     	isMouseDown = false;
     }
 
-    function onMouseMove(x:Int, y:Int) {
+    function onMouseMove(x:Int, y:Int, movementX:Int, movementY:Int) {
     	mouseDeltaX = x - mouseX;
     	mouseDeltaY = y - mouseY;
 
