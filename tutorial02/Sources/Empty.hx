@@ -65,7 +65,7 @@ class Empty extends Game {
 		// Copy vertices to vertex buffer
 		var vbData = vertexBuffer.lock();
 		for (i in 0...vbData.length) {
-			vbData[i] = vertices[i];
+			vbData.set(i, vertices[i]);
 		}
 		vertexBuffer.unlock();
 
