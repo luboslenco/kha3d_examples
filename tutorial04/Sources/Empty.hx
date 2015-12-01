@@ -1,10 +1,9 @@
 package ;
 
-import kha.Game;
 import kha.Framebuffer;
 import kha.Color;
-import kha.Loader;
-import kha.graphics4.Program;
+import kha.Shaders;
+import kha.graphics4.PipelineState;
 import kha.graphics4.VertexStructure;
 import kha.graphics4.VertexBuffer;
 import kha.graphics4.IndexBuffer;
@@ -17,7 +16,7 @@ import kha.graphics4.CompareMode;
 import kha.math.Matrix4;
 import kha.math.Vector3;
 
-class Empty extends Game {
+class Empty {
 
 	// An array of vertices to form a cube
 	static var vertices:Array<Float> = [
@@ -100,16 +99,12 @@ class Empty extends Game {
 
 	var vertexBuffer:VertexBuffer;
 	var indexBuffer:IndexBuffer;
-	var program:Program;
+	var pipeline:PipelineState;
 
 	var mvp:Matrix4;
 	var mvpID:ConstantLocation;
 
 	public function new() {
-		super("Empty");
-	}
-
-	override public function init() {
 		// Define vertex structure
 		var structure = new VertexStructure();
         structure.add("pos", VertexData.Float3);
@@ -117,19 +112,20 @@ class Empty extends Game {
         // Save length - we store position and color data
         var structureLength = 6;
 
-        // Load shaders - these are located in 'Sources/Shaders' directory
+        // Compile pipeline state
+		// Shaders are located in 'Sources/Shaders' directory
         // and Kha includes them automatically
-		var fragmentShader = new FragmentShader(Loader.the.getShader("simple.frag"));
-		var vertexShader = new VertexShader(Loader.the.getShader("simple.vert"));
-	
-		// Link program with fragment and vertex shaders we loaded
-		program = new Program();
-		program.setFragmentShader(fragmentShader);
-		program.setVertexShader(vertexShader);
-		program.link(structure);
+		pipeline = new PipelineState();
+		pipeline.inputLayout = [structure];
+		pipeline.fragmentShader = Shaders.simple_frag;
+		pipeline.vertexShader = Shaders.simple_vert;
+		// Set depth mode
+        pipeline.depthWrite = true;
+        pipeline.depthMode = CompareMode.Less;
+		pipeline.compile();
 
 		// Get a handle for our "MVP" uniform
-		mvpID = program.getConstantLocation("MVP");
+		mvpID = pipeline.getConstantLocation("MVP");
 
 		// Projection matrix: 45° Field of View, 4:3 ratio, display range : 0.1 unit <-> 100 units
 		var projection = Matrix4.perspectiveProjection(45.0, 4.0 / 3.0, 0.1, 100.0);
@@ -190,15 +186,12 @@ class Empty extends Game {
 		indexBuffer.unlock();
     }
 
-	override public function render(frame:Framebuffer) {
+	public function render(frame:Framebuffer) {
 		// A graphics object which lets us perform 3D operations
 		var g = frame.g4;
 
 		// Begin rendering
         g.begin();
-
-        // Set depth mode
-        g.setDepthMode(true, CompareMode.Less);
 
         // Clear screen
 		g.clear(Color.fromFloats(0.0, 0.0, 0.3), 1.0);
@@ -207,8 +200,8 @@ class Empty extends Game {
 		g.setVertexBuffer(vertexBuffer);
 		g.setIndexBuffer(indexBuffer);
 
-		// Bind shader program we want to draw with
-		g.setProgram(program);
+		// Bind state we want to draw with
+		g.setPipeline(pipeline);
 
 		// Set our transformation to the currently bound shader, in the "MVP" uniform
 		g.setMatrix(mvpID, mvp);

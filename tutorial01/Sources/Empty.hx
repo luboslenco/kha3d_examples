@@ -1,16 +1,15 @@
 package;
 
-import kha.Game;
 import kha.Framebuffer;
 import kha.Color;
 
-class Empty extends Game {
+class Empty {
 
 	public function new() {
-		super("Empty");
+
 	}
 
-	override public function render(frame:Framebuffer) {
+	public function render(frame:Framebuffer) {
 		// A graphics object which lets us perform 3D operations
 		var g = frame.g4;
 

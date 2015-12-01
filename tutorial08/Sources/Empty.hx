@@ -1,16 +1,14 @@
 package ;
 
-import kha.Game;
 import kha.Framebuffer;
 import kha.Color;
-import kha.Loader;
-import kha.LoadingScreen;
-import kha.Configuration;
+import kha.Shaders;
+import kha.Assets;
 import kha.Image;
 import kha.Scheduler;
 import kha.Key;
 import kha.graphics4.TextureUnit;
-import kha.graphics4.Program;
+import kha.graphics4.PipelineState;
 import kha.graphics4.VertexStructure;
 import kha.graphics4.VertexBuffer;
 import kha.graphics4.IndexBuffer;
@@ -20,14 +18,15 @@ import kha.graphics4.VertexData;
 import kha.graphics4.Usage;
 import kha.graphics4.ConstantLocation;
 import kha.graphics4.CompareMode;
+import kha.graphics4.CullMode;
 import kha.math.Matrix4;
 import kha.math.Vector3;
 
-class Empty extends Game {
+class Empty {
 
 	var vertexBuffer:VertexBuffer;
 	var indexBuffer:IndexBuffer;
-	var program:Program;
+	var pipeline:PipelineState;
 
 	var mvp:Matrix4;
 	var mvpID:ConstantLocation;
@@ -63,15 +62,9 @@ class Empty extends Game {
 	var mouseSpeed = 0.005;
 
 	public function new() {
-		super("Empty");
+		// Load all assets defined in khafile.js
+    	Assets.loadEverything(loadingFinished);
 	}
-
-	override public function init() {
-        Configuration.setScreen(new LoadingScreen());
-
-        // Load room with our texture and obj data
-        Loader.the.loadRoom("room0", loadingFinished);
-    }
 
 	function loadingFinished() {
 		// Define vertex structure
@@ -82,28 +75,31 @@ class Empty extends Game {
         // Save length - we store position, uv and normal data
         var structureLength = 8;
 
-        // Load shaders - these are located in 'Sources/Shaders' directory
+        // Compile pipeline state
+		// Shaders are located in 'Sources/Shaders' directory
         // and Kha includes them automatically
-		var fragmentShader = new FragmentShader(Loader.the.getShader("simple.frag"));
-		var vertexShader = new VertexShader(Loader.the.getShader("simple.vert"));
-	
-		// Link program with fragment and vertex shaders we loaded
-		program = new Program();
-		program.setFragmentShader(fragmentShader);
-		program.setVertexShader(vertexShader);
-		program.link(structure);
+		pipeline = new PipelineState();
+		pipeline.inputLayout = [structure];
+		pipeline.vertexShader = Shaders.simple_vert;
+		pipeline.fragmentShader = Shaders.simple_frag;
+		// Set depth mode
+        pipeline.depthWrite = true;
+        pipeline.depthMode = CompareMode.Less;
+        // Set culling
+        pipeline.cullMode = CullMode.CounterClockwise;
+		pipeline.compile();
 
 		// Get handles for our uniforms
-		mvpID = program.getConstantLocation("MVP");
-		viewMatrixID = program.getConstantLocation("V");
-		modelMatrixID = program.getConstantLocation("M");
-		lightID = program.getConstantLocation("lightPos");
+		mvpID = pipeline.getConstantLocation("MVP");
+		viewMatrixID = pipeline.getConstantLocation("V");
+		modelMatrixID = pipeline.getConstantLocation("M");
+		lightID = pipeline.getConstantLocation("lightPos");
 
 		// Get a handle for texture sample
-		textureID = program.getTextureUnit("myTextureSampler");
+		textureID = pipeline.getTextureUnit("myTextureSampler");
 
 		// Texture
-		image = Loader.the.getImage("uvmap");
+		image = Assets.images.uvmap;
 
 		// Projection matrix: 45° Field of View, 4:3 ratio, display range : 0.1 unit <-> 100 units
 		projection = Matrix4.perspectiveProjection(45.0, 4.0 / 3.0, 0.1, 100.0);
@@ -126,7 +122,7 @@ class Empty extends Game {
 		mvp = mvp.multmat(model);
 
 		// Parse .obj file
-		var obj = new ObjLoader(Loader.the.getBlob("suzanne").toString());
+		var obj = new ObjLoader(Assets.blobs.suzanne.toString());
 		var data = obj.data;
 		var indices = obj.indices;
 
@@ -163,22 +159,14 @@ class Empty extends Game {
 
 		// Used to calculate delta time
 		lastTime = Scheduler.time();
-
-		Configuration.setScreen(this);
     }
 
-	override public function render(frame:Framebuffer) {
+	public function render(frame:Framebuffer) {
 		// A graphics object which lets us perform 3D operations
 		var g = frame.g4;
 
 		// Begin rendering
         g.begin();
-
-        // Set depth mode
-        g.setDepthMode(true, CompareMode.Less);
-
-        // Set culling
-        g.setCullMode(kha.graphics4.CullMode.CounterClockwise);
 
         // Clear screen
 		g.clear(Color.fromFloats(0.0, 0.0, 0.3), 1.0);
@@ -187,8 +175,8 @@ class Empty extends Game {
 		g.setVertexBuffer(vertexBuffer);
 		g.setIndexBuffer(indexBuffer);
 
-		// Bind shader program we want to draw with
-		g.setProgram(program);
+		// Bind state we want to draw with
+		g.setPipeline(pipeline);
 
 		// Set our uniforms
 		g.setMatrix(mvpID, mvp);
@@ -208,7 +196,7 @@ class Empty extends Game {
 		g.end();
     }
 
-    override public function update() {
+    public function update() {
     	// Compute time difference between current and last frame
 		var deltaTime = Scheduler.time() - lastTime;
 		lastTime = Scheduler.time();

@@ -1,10 +1,9 @@
 package;
 
-import kha.Game;
 import kha.Framebuffer;
 import kha.Color;
-import kha.Loader;
-import kha.graphics4.Program;
+import kha.Shaders;
+import kha.graphics4.PipelineState;
 import kha.graphics4.VertexStructure;
 import kha.graphics4.VertexBuffer;
 import kha.graphics4.IndexBuffer;
@@ -13,7 +12,7 @@ import kha.graphics4.VertexShader;
 import kha.graphics4.VertexData;
 import kha.graphics4.Usage;
 
-class Empty extends Game {
+class Empty {
 
 	// An array of 3 vectors representing 3 vertices to form a triangle
 	static var vertices:Array<Float> = [
@@ -30,30 +29,24 @@ class Empty extends Game {
 
 	var vertexBuffer:VertexBuffer;
 	var indexBuffer:IndexBuffer;
-	var program:Program;
+	var pipeline:PipelineState;
 
 	public function new() {
-		super("Empty");
-	}
-
-	override public function init() {
 		// Define vertex structure
 		var structure = new VertexStructure();
         structure.add("pos", VertexData.Float3);
         // Save length - we only store position in vertices for now
         // Eventually there will be texture coords, normals,...
         var structureLength = 3;
-
-        // Load shaders - these are located in 'Sources/Shaders' directory
-        // and Kha includes them automatically
-		var fragmentShader = new FragmentShader(Loader.the.getShader("simple.frag"));
-		var vertexShader = new VertexShader(Loader.the.getShader("simple.vert"));
 	
-		// Link program with fragment and vertex shaders we loaded
-		program = new Program();
-		program.setFragmentShader(fragmentShader);
-		program.setVertexShader(vertexShader);
-		program.link(structure);
+		// Compile pipeline state
+		// Shaders are located in 'Sources/Shaders' directory
+        // and Kha includes them automatically
+		pipeline = new PipelineState();
+		pipeline.inputLayout = [structure];
+		pipeline.fragmentShader = Shaders.simple_frag;
+		pipeline.vertexShader = Shaders.simple_vert;
+		pipeline.compile();
 
 		// Create vertex buffer
 		vertexBuffer = new VertexBuffer(
@@ -83,7 +76,7 @@ class Empty extends Game {
 		indexBuffer.unlock();
     }
 
-	override public function render(frame:Framebuffer) {
+	public function render(frame:Framebuffer) {
 		// A graphics object which lets us perform 3D operations
 		var g = frame.g4;
 
@@ -93,8 +86,8 @@ class Empty extends Game {
         // Clear screen to black
 		g.clear(Color.Black);
 
-		// Bind shader program we want to draw with
-		g.setProgram(program);
+		// Bind state we want to draw with
+		g.setPipeline(pipeline);
 
 		// Bind data we want to draw
 		g.setVertexBuffer(vertexBuffer);
