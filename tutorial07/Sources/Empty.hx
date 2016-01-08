@@ -19,8 +19,8 @@ import kha.graphics4.Usage;
 import kha.graphics4.ConstantLocation;
 import kha.graphics4.CompareMode;
 import kha.graphics4.CullMode;
-import kha.math.Matrix4;
-import kha.math.Vector3;
+import kha.math.FastMatrix4;
+import kha.math.FastVector3;
 
 class Empty {
 
@@ -28,19 +28,19 @@ class Empty {
 	var indexBuffer:IndexBuffer;
 	var pipeline:PipelineState;
 
-	var mvp:Matrix4;
+	var mvp:FastMatrix4;
 	var mvpID:ConstantLocation;
 
-	var model:Matrix4;
-	var view:Matrix4;
-	var projection:Matrix4;
+	var model:FastMatrix4;
+	var view:FastMatrix4;
+	var projection:FastMatrix4;
 
 	var textureID:TextureUnit;
     var image:Image;
 
     var lastTime = 0.0;
 
-	var position:Vector3 = new Vector3(0, 0, 5); // Initial position: on +Z
+	var position:FastVector3 = new FastVector3(0, 0, 5); // Initial position: on +Z
 	var horizontalAngle = 3.14; // Initial horizontal angle: toward -Z
 	var verticalAngle = 0.0; // Initial vertical angle: none
 
@@ -96,27 +96,27 @@ class Empty {
 		image = Assets.images.uvmap;
 
 		// Projection matrix: 45° Field of View, 4:3 ratio, display range : 0.1 unit <-> 100 units
-		projection = Matrix4.perspectiveProjection(45.0, 4.0 / 3.0, 0.1, 100.0);
+		projection = FastMatrix4.perspectiveProjection(45.0, 4.0 / 3.0, 0.1, 100.0);
 		// Or, for an ortho camera
-		//projection = Matrix4.orthogonalProjection(-10.0, 10.0, -10.0, 10.0, 0.0, 100.0); // In world coordinates
+		//projection = FastMatrix4.orthogonalProjection(-10.0, 10.0, -10.0, 10.0, 0.0, 100.0); // In world coordinates
 		
 		// Camera matrix
-		view = Matrix4.lookAt(new Vector3(4, 3, 3), // Camera is at (4, 3, 3), in World Space
-							  new Vector3(0, 0, 0), // and looks at the origin
-							  new Vector3(0, 1, 0) // Head is up (set to (0, -1, 0) to look upside-down)
+		view = FastMatrix4.lookAt(new FastVector3(4, 3, 3), // Camera is at (4, 3, 3), in World Space
+							  new FastVector3(0, 0, 0), // and looks at the origin
+							  new FastVector3(0, 1, 0) // Head is up (set to (0, -1, 0) to look upside-down)
 		);
 
 		// Model matrix: an identity matrix (model will be at the origin)
-		model = Matrix4.identity();
+		model = FastMatrix4.identity();
 		// Our ModelViewProjection: multiplication of our 3 matrices
 		// Remember, matrix multiplication is the other way around
-		mvp = Matrix4.identity();
+		mvp = FastMatrix4.identity();
 		mvp = mvp.multmat(projection);
 		mvp = mvp.multmat(view);
 		mvp = mvp.multmat(model);
 
 		// Parse .obj file
-		var obj = new ObjLoader(Assets.blobs.cube.toString());
+		var obj = new ObjLoader(Assets.blobs.cube_obj.toString());
 		var data = obj.data;
 		var indices = obj.indices;
 
@@ -197,14 +197,14 @@ class Empty {
 		}
 
 		// Direction : Spherical coordinates to Cartesian coordinates conversion
-		var direction = new Vector3(
+		var direction = new FastVector3(
 			Math.cos(verticalAngle) * Math.sin(horizontalAngle),
 			Math.sin(verticalAngle),
 			Math.cos(verticalAngle) * Math.cos(horizontalAngle)
 		);
 		
 		// Right vector
-		var right = new Vector3(
+		var right = new FastVector3(
 			Math.sin(horizontalAngle - 3.14 / 2.0), 
 			0,
 			Math.cos(horizontalAngle - 3.14 / 2.0)
@@ -235,13 +235,13 @@ class Empty {
 		var look = position.add(direction);
 		
 		// Camera matrix
-		view = Matrix4.lookAt(position, // Camera is here
+		view = FastMatrix4.lookAt(position, // Camera is here
 							  look, // and looks here : at the same position, plus "direction"
 							  up // Head is up (set to (0, -1, 0) to look upside-down)
 		);
 		
 		// Update model-view-projection matrix
-		mvp = Matrix4.identity();
+		mvp = FastMatrix4.identity();
 		mvp = mvp.multmat(projection);
 		mvp = mvp.multmat(view);
 		mvp = mvp.multmat(model);
