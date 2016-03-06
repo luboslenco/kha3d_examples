@@ -5,6 +5,7 @@ import kha.Color;
 import kha.Shaders;
 import kha.Assets;
 import kha.Image;
+import kha.System;
 import kha.graphics4.TextureUnit;
 import kha.graphics4.PipelineState;
 import kha.graphics4.VertexStructure;
@@ -200,6 +201,8 @@ class Empty {
 			iData[i] = indices[i];
 		}
 		indexBuffer.unlock();
+		
+		System.notifyOnRender(render);
     }
 
 	public function render(frame:Framebuffer) {

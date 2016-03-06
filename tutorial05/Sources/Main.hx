@@ -10,6 +10,5 @@ class Main {
 
 	static function init() {
 		var game = new Empty();
-		System.notifyOnRender(game.render);
 	}
 }
