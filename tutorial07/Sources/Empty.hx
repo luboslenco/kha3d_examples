@@ -7,6 +7,7 @@ import kha.Assets;
 import kha.Image;
 import kha.Scheduler;
 import kha.Key;
+import kha.System;
 import kha.graphics4.TextureUnit;
 import kha.graphics4.PipelineState;
 import kha.graphics4.VertexStructure;
@@ -153,6 +154,9 @@ class Empty {
 
 		// Used to calculate delta time
 		lastTime = Scheduler.time();
+		
+		System.notifyOnRender(render);
+		Scheduler.addTimeTask(update, 0, 1 / 60);
     }
 
 	public function render(frame:Framebuffer) {
