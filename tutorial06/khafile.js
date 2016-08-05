@@ -1,7 +1,7 @@
-var project = new Project('Empty');
+let project = new Project('Empty');
 
 project.addSources('Sources');
 project.addShaders('Sources/Shaders/**');
 project.addAssets('Assets/**');
 
-return project;
+resolve(project);
