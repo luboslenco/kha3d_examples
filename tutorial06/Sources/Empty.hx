@@ -162,7 +162,7 @@ class Empty {
         pipeline.depthWrite = true;
         pipeline.depthMode = CompareMode.Less;
         // Set culling
-        pipeline.cullMode = CullMode.CounterClockwise;
+        pipeline.cullMode = CullMode.Clockwise;
 		pipeline.compile();
 
 		// Get a handle for our "MVP" uniform

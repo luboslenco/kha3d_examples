@@ -87,7 +87,7 @@ class Empty {
         pipeline.depthWrite = true;
         pipeline.depthMode = CompareMode.Less;
         // Set culling
-        pipeline.cullMode = CullMode.CounterClockwise;
+        pipeline.cullMode = CullMode.Clockwise;
 		pipeline.compile();
 
 		// Get handles for our uniforms
