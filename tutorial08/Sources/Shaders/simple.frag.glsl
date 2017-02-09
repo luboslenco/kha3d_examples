@@ -1,19 +1,19 @@
-#ifdef GL_ES
-precision mediump float;
-#endif
+#version 450
 
 // Interpolated values from the vertex shaders
-varying vec2 vUV;
-varying vec3 positionWorldspace;
-varying vec3 normalCameraspace;
-varying vec3 eyeDirectionCameraspace;
-varying vec3 lightDirectionCameraspace;
+in vec2 vUV;
+in vec3 positionWorldspace;
+in vec3 normalCameraspace;
+in vec3 eyeDirectionCameraspace;
+in vec3 lightDirectionCameraspace;
 
 // Values that stay constant for the whole mesh.
 uniform sampler2D myTextureSampler;
 uniform vec3 lightPos;
 
-void kore() {
+out vec4 fragColor;
+
+void main() {
 
 	// Light emission properties
 	// You probably want to put them as uniforms
@@ -21,7 +21,7 @@ void kore() {
 	float lightPower = 50.0;
 	
 	// Material properties
-	vec3 materialDiffuseColor = texture2D(myTextureSampler, vUV).rgb;
+	vec3 materialDiffuseColor = texture(myTextureSampler, vUV).rgb;
 	vec3 materialAmbientColor = vec3(0.1, 0.1, 0.1) * materialDiffuseColor;
 	vec3 materialSpecularColor = vec3(0.3, 0.3, 0.3);
 
@@ -51,7 +51,7 @@ void kore() {
 	//  - Looking elsewhere -> < 1
 	float cosAlpha = clamp(dot(E, R), 0.0, 1.0);
 	
-	gl_FragColor = vec4(vec3(
+	fragColor = vec4(vec3(
 		// Ambient: simulates indirect lighting
 		materialAmbientColor +
 		// Diffuse: "color" of the object

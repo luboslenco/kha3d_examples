@@ -1,18 +1,16 @@
-#ifdef GL_ES
-precision highp float;
-#endif
+#version 450
 
 // Input vertex data, different for all executions of this shader
-attribute vec3 pos;
-attribute vec2 uv;
-attribute vec3 nor;
+in vec3 pos;
+in vec2 uv;
+in vec3 nor;
 
 // Output data: will be interpolated for each fragment
-varying vec2 vUV;
-varying vec3 positionWorldspace;
-varying vec3 normalCameraspace;
-varying vec3 eyeDirectionCameraspace;
-varying vec3 lightDirectionCameraspace;
+out vec2 vUV;
+out vec3 positionWorldspace;
+out vec3 normalCameraspace;
+out vec3 eyeDirectionCameraspace;
+out vec3 lightDirectionCameraspace;
 
 // Values that stay constant for the whole mesh
 uniform mat4 MVP;
@@ -20,7 +18,7 @@ uniform mat4 V;
 uniform mat4 M;
 uniform vec3 lightPos;
 
-void kore() {
+void main() {
 	// Output position of the vertex, in clip space: MVP * position
 	gl_Position = MVP * vec4(pos, 1.0);
 	
