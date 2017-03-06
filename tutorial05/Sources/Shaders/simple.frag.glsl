@@ -11,5 +11,5 @@ out vec4 fragColor;
 void main() {
 
 	// Output color = color of the texture at the specified UV
-	fragColor = texture2D(myTextureSampler, vUV);
+	fragColor = texture(myTextureSampler, vUV);
 }
