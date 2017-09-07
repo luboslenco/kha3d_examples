@@ -6,7 +6,9 @@ import kha.Shaders;
 import kha.Assets;
 import kha.Image;
 import kha.Scheduler;
-import kha.Key;
+import kha.input.Keyboard;
+import kha.input.Mouse;
+import kha.input.KeyCode;
 import kha.System;
 import kha.graphics4.TextureUnit;
 import kha.graphics4.PipelineState;
@@ -270,17 +272,17 @@ class Empty {
     	mouseY = y;
     }
 
-    function onKeyDown(key:Key, char:String) {
-        if (key == Key.UP) moveForward = true;
-        else if (key == Key.DOWN) moveBackward = true;
-        else if (key == Key.LEFT) strafeLeft = true;
-        else if (key == Key.RIGHT) strafeRight = true;
+    function onKeyDown(key:Int) {
+        if (key == KeyCode.Up) moveForward = true;
+        else if (key == KeyCode.Down) moveBackward = true;
+        else if (key == KeyCode.Left) strafeLeft = true;
+        else if (key == KeyCode.Right) strafeRight = true;
     }
 
-    function onKeyUp(key:Key, char:String) {
-        if (key == Key.UP) moveForward = false;
-        else if (key == Key.DOWN) moveBackward = false;
-        else if (key == Key.LEFT) strafeLeft = false;
-        else if (key == Key.RIGHT) strafeRight = false;
+    function onKeyUp(key:Int) {
+        if (key == KeyCode.Up) moveForward = false;
+        else if (key == KeyCode.Down) moveBackward = false;
+        else if (key == KeyCode.Left) strafeLeft = false;
+        else if (key == KeyCode.Right) strafeRight = false;
     }
 }
