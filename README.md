@@ -1,4 +1,4 @@
 # kha3d_examples
-See [tutorials](https://github.com/luboslenco/kha3d_examples/wiki).
+This repository contains a set of step-by-step tutorials on programming 3D graphics using Haxe and Kha. Get started in the [wiki](https://github.com/luboslenco/kha3d_examples/wiki)!
 
-Note: In case of issues, please use git version of Kha, as Haxelib version may be outdated.
+![](img.png)
