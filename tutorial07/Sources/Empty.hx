@@ -157,13 +157,13 @@ class Empty {
 		// Used to calculate delta time
 		lastTime = Scheduler.time();
 		
-		System.notifyOnRender(render);
+		System.notifyOnFrames(render);
 		Scheduler.addTimeTask(update, 0, 1 / 60);
     }
 
-	public function render(frame:Framebuffer) {
+	public function render(frames:Array<Framebuffer>) {
 		// A graphics object which lets us perform 3D operations
-		var g = frame.g4;
+		var g = frames[0].g4;
 
 		// Begin rendering
         g.begin();

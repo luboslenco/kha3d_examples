@@ -186,9 +186,9 @@ class Empty {
 		indexBuffer.unlock();
     }
 
-	public function render(frame:Framebuffer) {
+	public function render(frames:Array<Framebuffer>) {
 		// A graphics object which lets us perform 3D operations
-		var g = frame.g4;
+		var g = frames[0].g4;
 
 		// Begin rendering
         g.begin();
