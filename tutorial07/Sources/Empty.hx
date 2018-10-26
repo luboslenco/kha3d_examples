@@ -71,9 +71,8 @@ class Empty {
 		var structure = new VertexStructure();
         structure.add("pos", VertexData.Float3);
         structure.add("uv", VertexData.Float2);
-        structure.add("nor", VertexData.Float3);
-        // Save length - we store position, uv and normal data
-        var structureLength = 8;
+        // Save length - we store position and uv data
+        var structureLength = 5;
 
         // Compile pipeline state
 		// Shaders are located in 'Sources/Shaders' directory

@@ -3,7 +3,6 @@
 // Input vertex data, different for all executions of this shader
 in vec3 pos;
 in vec2 uv;
-in vec2 nor;
 
 // Output data: will be interpolated for each fragment.
 out vec2 vUV;
