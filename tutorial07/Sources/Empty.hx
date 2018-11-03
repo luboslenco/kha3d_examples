@@ -118,7 +118,7 @@ class Empty {
 		mvp = mvp.multmat(model);
 
 		// Parse .obj file
-		var obj = new ObjLoader(Assets.blobs.cube_obj.toString());
+		var obj = new ObjLoader(Assets.blobs.cube_obj);
 		var data = obj.data;
 		var indices = obj.indices;
 

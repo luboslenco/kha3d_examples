@@ -10,7 +10,7 @@ class ObjLoader {
 	public var data:Array<Float>;
 	public var indices:Array<Int>;
 
-	public function new(objData:String) {
+	public function new(blob:kha.Blob) {
 
 		var vertices:Array<Float> = [];
 		var uvs:Array<Float> = [];
@@ -24,10 +24,22 @@ class ObjLoader {
 		var tempUVs:Array<Array<Float>> = [];
 		var tempNormals:Array<Array<Float>> = [];
 
-		var lines:Array<String> = objData.split("\n");
+		var pos = 0;
+		while (true) {
 
-		for (i in 0...lines.length) {
-			var words:Array<String> = lines[i].split(" ");
+			if (pos >= blob.length) break;
+
+			var line = "";
+
+			while (true) {
+				var c = String.fromCharCode(blob.readU8(pos));
+				pos++;
+				if (c == "\n") break;
+				if (pos >= blob.length) break;
+				line += c;
+			}
+
+			var words:Array<String> = line.split(" ");
 
 			if (words[0] == "v") {
 				var vector:Array<Float> = [];
