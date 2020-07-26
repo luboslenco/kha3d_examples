@@ -122,6 +122,9 @@ class Empty {
 		// Set depth mode
         pipeline.depthWrite = true;
         pipeline.depthMode = CompareMode.Less;
+        pipeline.colorAttachmentCount = 1;
+		pipeline.colorAttachments[0] = kha.graphics4.TextureFormat.RGBA32;
+		pipeline.depthStencilAttachment = kha.graphics4.DepthStencilFormat.Depth16;
 		pipeline.compile();
 
 		// Get a handle for our "MVP" uniform
@@ -131,7 +134,7 @@ class Empty {
 		var projection = FastMatrix4.perspectiveProjection(45.0, 4.0 / 3.0, 0.1, 100.0);
 		// Or, for an ortho camera
 		//var projection = FastMatrix4.orthogonalProjection(-10.0, 10.0, -10.0, 10.0, 0.0, 100.0); // In world coordinates
-		
+
 		// Camera matrix
 		var view = FastMatrix4.lookAt(new FastVector3(4, 3, 3), // Camera is at (4, 3, 3), in World Space
 								  new FastVector3(0, 0, 0), // and looks at the origin
@@ -153,7 +156,7 @@ class Empty {
 			structure, // Vertex structure
 			Usage.StaticUsage // Vertex data will stay the same
 		);
-		
+
 		// Copy vertices and colors to vertex buffer
 		var vbData = vertexBuffer.lock();
 		for (i in 0...Std.int(vbData.length / structureLength)) {
@@ -177,7 +180,7 @@ class Empty {
 			indices.length, // Number of indices for our cube
 			Usage.StaticUsage // Index data will stay the same
 		);
-		
+
 		// Copy indices to index buffer
 		var iData = indexBuffer.lock();
 		for (i in 0...iData.length) {

@@ -68,41 +68,41 @@ class Empty {
 	];
 	// Array of texture coords for each cube vertex
 	static var uvs:Array<Float> = [
-	    0.000059, 0.000004, 
-		0.000103, 0.336048, 
-		0.335973, 0.335903, 
-		1.000023, 0.000013, 
-		0.667979, 0.335851, 
-		0.999958, 0.336064, 
-		0.667979, 0.335851, 
-		0.336024, 0.671877, 
-		0.667969, 0.671889, 
-		1.000023, 0.000013, 
-		0.668104, 0.000013, 
-		0.667979, 0.335851, 
-		0.000059, 0.000004, 
-		0.335973, 0.335903, 
-		0.336098, 0.000071, 
-		0.667979, 0.335851, 
-		0.335973, 0.335903, 
-		0.336024, 0.671877, 
-		1.000004, 0.671847, 
-		0.999958, 0.336064, 
-		0.667979, 0.335851, 
-		0.668104, 0.000013, 
-		0.335973, 0.335903, 
-		0.667979, 0.335851, 
+	    0.000059, 0.000004,
+		0.000103, 0.336048,
 		0.335973, 0.335903,
-		0.668104, 0.000013, 
-		0.336098, 0.000071, 
-		0.000103, 0.336048, 
-		0.000004, 0.671870, 
-		0.336024, 0.671877, 
-		0.000103, 0.336048, 
-		0.336024, 0.671877, 
-		0.335973, 0.335903, 
-		0.667969, 0.671889, 
-		1.000004, 0.671847, 
+		1.000023, 0.000013,
+		0.667979, 0.335851,
+		0.999958, 0.336064,
+		0.667979, 0.335851,
+		0.336024, 0.671877,
+		0.667969, 0.671889,
+		1.000023, 0.000013,
+		0.668104, 0.000013,
+		0.667979, 0.335851,
+		0.000059, 0.000004,
+		0.335973, 0.335903,
+		0.336098, 0.000071,
+		0.667979, 0.335851,
+		0.335973, 0.335903,
+		0.336024, 0.671877,
+		1.000004, 0.671847,
+		0.999958, 0.336064,
+		0.667979, 0.335851,
+		0.668104, 0.000013,
+		0.335973, 0.335903,
+		0.667979, 0.335851,
+		0.335973, 0.335903,
+		0.668104, 0.000013,
+		0.336098, 0.000071,
+		0.000103, 0.336048,
+		0.000004, 0.671870,
+		0.336024, 0.671877,
+		0.000103, 0.336048,
+		0.336024, 0.671877,
+		0.335973, 0.335903,
+		0.667969, 0.671889,
+		1.000004, 0.671847,
 		0.667979, 0.335851
 	];
 
@@ -165,6 +165,9 @@ class Empty {
         pipeline.depthMode = CompareMode.Less;
         // Set culling
         pipeline.cullMode = CullMode.Clockwise;
+        pipeline.colorAttachmentCount = 1;
+		pipeline.colorAttachments[0] = kha.graphics4.TextureFormat.RGBA32;
+		pipeline.depthStencilAttachment = kha.graphics4.DepthStencilFormat.Depth16;
 		pipeline.compile();
 
 		// Get a handle for our "MVP" uniform
@@ -180,7 +183,7 @@ class Empty {
 		projection = FastMatrix4.perspectiveProjection(45.0, 4.0 / 3.0, 0.1, 100.0);
 		// Or, for an ortho camera
 		//projection = FastMatrix4.orthogonalProjection(-10.0, 10.0, -10.0, 10.0, 0.0, 100.0); // In world coordinates
-		
+
 		// Camera matrix
 		view = FastMatrix4.lookAt(new FastVector3(4, 3, 3), // Camera is at (4, 3, 3), in World Space
 							  new FastVector3(0, 0, 0), // and looks at the origin
@@ -225,7 +228,7 @@ class Empty {
 			indices.length, // Number of indices for our cube
 			Usage.StaticUsage // Index data will stay the same
 		);
-		
+
 		// Copy indices to index buffer
 		var iData = indexBuffer.lock();
 		for (i in 0...iData.length) {
@@ -239,7 +242,7 @@ class Empty {
 
 		// Used to calculate delta time
 		lastTime = Scheduler.time();
-		
+
 		System.notifyOnFrames(render);
 		Scheduler.addTimeTask(update, 0, 1 / 60);
     }
@@ -291,14 +294,14 @@ class Empty {
 			Math.sin(verticalAngle),
 			Math.cos(verticalAngle) * Math.cos(horizontalAngle)
 		);
-		
+
 		// Right vector
 		var right = new FastVector3(
-			Math.sin(horizontalAngle - 3.14 / 2.0), 
+			Math.sin(horizontalAngle - 3.14 / 2.0),
 			0,
 			Math.cos(horizontalAngle - 3.14 / 2.0)
 		);
-		
+
 		// Up vector
 		var up = right.cross(direction);
 
@@ -322,13 +325,13 @@ class Empty {
 
 		// Look vector
 		var look = position.add(direction);
-		
+
 		// Camera matrix
 		view = FastMatrix4.lookAt(position, // Camera is here
 							  look, // and looks here : at the same position, plus "direction"
 							  up // Head is up (set to (0, -1, 0) to look upside-down)
 		);
-		
+
 		// Update model-view-projection matrix
 		mvp = FastMatrix4.identity();
 		mvp = mvp.multmat(projection);

@@ -38,7 +38,7 @@ class Empty {
         // Save length - we only store position in vertices for now
         // Eventually there will be texture coords, normals,...
         var structureLength = 3;
-	
+
 		// Compile pipeline state
 		// Shaders are located in 'Sources/Shaders' directory
         // and Kha includes them automatically
@@ -46,6 +46,9 @@ class Empty {
 		pipeline.inputLayout = [structure];
 		pipeline.fragmentShader = Shaders.simple_frag;
 		pipeline.vertexShader = Shaders.simple_vert;
+		pipeline.colorAttachmentCount = 1;
+		pipeline.colorAttachments[0] = kha.graphics4.TextureFormat.RGBA32;
+		pipeline.depthStencilAttachment = kha.graphics4.DepthStencilFormat.Depth16;
 		pipeline.compile();
 
 		// Create vertex buffer
@@ -54,7 +57,7 @@ class Empty {
 			structure, // Vertex structure
 			Usage.StaticUsage // Vertex data will stay the same
 		);
-		
+
 		// Copy vertices to vertex buffer
 		var vbData = vertexBuffer.lock();
 		for (i in 0...vbData.length) {
@@ -67,7 +70,7 @@ class Empty {
 			indices.length, // 3 indices for our triangle
 			Usage.StaticUsage // Index data will stay the same
 		);
-		
+
 		// Copy indices to index buffer
 		var iData = indexBuffer.lock();
 		for (i in 0...iData.length) {

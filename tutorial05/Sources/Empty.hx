@@ -63,41 +63,41 @@ class Empty {
 	];
 	// Array of texture coords for each cube vertex
 	static var uvs:Array<Float> = [
-	    0.000059, 0.000004, 
-		0.000103, 0.336048, 
-		0.335973, 0.335903, 
-		1.000023, 0.000013, 
-		0.667979, 0.335851, 
-		0.999958, 0.336064, 
-		0.667979, 0.335851, 
-		0.336024, 0.671877, 
-		0.667969, 0.671889, 
-		1.000023, 0.000013, 
-		0.668104, 0.000013, 
-		0.667979, 0.335851, 
-		0.000059, 0.000004, 
-		0.335973, 0.335903, 
-		0.336098, 0.000071, 
-		0.667979, 0.335851, 
-		0.335973, 0.335903, 
-		0.336024, 0.671877, 
-		1.000004, 0.671847, 
-		0.999958, 0.336064, 
-		0.667979, 0.335851, 
-		0.668104, 0.000013, 
-		0.335973, 0.335903, 
-		0.667979, 0.335851, 
+	    0.000059, 0.000004,
+		0.000103, 0.336048,
 		0.335973, 0.335903,
-		0.668104, 0.000013, 
-		0.336098, 0.000071, 
-		0.000103, 0.336048, 
-		0.000004, 0.671870, 
-		0.336024, 0.671877, 
-		0.000103, 0.336048, 
-		0.336024, 0.671877, 
-		0.335973, 0.335903, 
-		0.667969, 0.671889, 
-		1.000004, 0.671847, 
+		1.000023, 0.000013,
+		0.667979, 0.335851,
+		0.999958, 0.336064,
+		0.667979, 0.335851,
+		0.336024, 0.671877,
+		0.667969, 0.671889,
+		1.000023, 0.000013,
+		0.668104, 0.000013,
+		0.667979, 0.335851,
+		0.000059, 0.000004,
+		0.335973, 0.335903,
+		0.336098, 0.000071,
+		0.667979, 0.335851,
+		0.335973, 0.335903,
+		0.336024, 0.671877,
+		1.000004, 0.671847,
+		0.999958, 0.336064,
+		0.667979, 0.335851,
+		0.668104, 0.000013,
+		0.335973, 0.335903,
+		0.667979, 0.335851,
+		0.335973, 0.335903,
+		0.668104, 0.000013,
+		0.336098, 0.000071,
+		0.000103, 0.336048,
+		0.000004, 0.671870,
+		0.336024, 0.671877,
+		0.000103, 0.336048,
+		0.336024, 0.671877,
+		0.335973, 0.335903,
+		0.667969, 0.671889,
+		1.000004, 0.671847,
 		0.667979, 0.335851
 	];
 
@@ -134,6 +134,9 @@ class Empty {
 		// Set depth mode
         pipeline.depthWrite = true;
         pipeline.depthMode = CompareMode.Less;
+        pipeline.colorAttachmentCount = 1;
+		pipeline.colorAttachments[0] = kha.graphics4.TextureFormat.RGBA32;
+		pipeline.depthStencilAttachment = kha.graphics4.DepthStencilFormat.Depth16;
 		pipeline.compile();
 
 		// Get a handle for our "MVP" uniform
@@ -149,7 +152,7 @@ class Empty {
 		var projection = FastMatrix4.perspectiveProjection(45.0, 4.0 / 3.0, 0.1, 100.0);
 		// Or, for an ortho camera
 		//var projection = FastMatrix4.orthogonalProjection(-10.0, 10.0, -10.0, 10.0, 0.0, 100.0); // In world coordinates
-		
+
 		// Camera matrix
 		var view = FastMatrix4.lookAt(new FastVector3(4, 3, 3), // Camera is at (4, 3, 3), in World Space
 								  new FastVector3(0, 0, 0), // and looks at the origin
@@ -194,14 +197,14 @@ class Empty {
 			indices.length, // Number of indices for our cube
 			Usage.StaticUsage // Index data will stay the same
 		);
-		
+
 		// Copy indices to index buffer
 		var iData = indexBuffer.lock();
 		for (i in 0...iData.length) {
 			iData[i] = indices[i];
 		}
 		indexBuffer.unlock();
-		
+
 		System.notifyOnFrames(render);
     }
 
